@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\js\angular\**" />
+    <Compile Remove="wwwroot\js\node_modules\angular\**" />
+    <Content Remove="wwwroot\js\angular\**" />
+    <Content Remove="wwwroot\js\node_modules\angular\**" />
+    <EmbeddedResource Remove="wwwroot\js\angular\**" />
+    <EmbeddedResource Remove="wwwroot\js\node_modules\angular\**" />
+    <None Remove="wwwroot\js\angular\**" />
+    <None Remove="wwwroot\js\node_modules\angular\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AngularJS.Core" Version="1.8.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.15">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

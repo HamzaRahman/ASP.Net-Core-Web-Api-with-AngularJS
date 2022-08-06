@@ -1,0 +1,316 @@
+<html ng-app="app">
+<head>
+    <title>Hamza</title>
+    <!--<link href="lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />-->
+    <link href="css/Index.css" rel="stylesheet" />
+    <link href="font-awesome/css/all.css" rel="stylesheet" />
+
+    <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="popper.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <style>
+        .content {
+            padding: 100px;
+        }
+    </style>
+
+</head>
+<body align="center" style="background-color: #F5F5F5">
+    
+    <div ng-controller="PeopleController as pc">
+        <!--align="center"-->
+        <div class="container" >
+            <div style="
+    padding:10px 10px 0 10px;
+    position: sticky; top: 0; 
+    background-color: #E9E9E9; width: 100%; 
+    box-shadow: 2px 2px 5px 3px lightgray;
+    border-end-end-radius:10px;
+    border-end-start-radius:10px;"  >
+                <h1 style="margin-bottom:50px" class="display-4">People Grid </h1>
+
+                <hr />
+
+                <button style="margin-bottom: 50px; box-shadow: 2px 2px 5px 3px lightgray;" type="button" ng-click="pc.Reset()" class="btn btn-primary" data-toggle="modal" data-target="#PersonForm">
+                    <i class="fa-solid fa-plus"></i> Add Person
+                </button>
+            </div>
+
+            <div class="modal fade" id="PersonForm" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <form name="PersonForm" class="modal-content">
+                        <div class="modal-header">
+                            <p ng-if="pc.IsAdd">
+                                Add a new person to database
+                            </p>
+                            <p ng-if="!pc.IsAdd">
+                                {{pc.Person.Name}}
+                            </p>
+
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <label for="NameTB">Name</label>
+                                <input name="NameTB" class="form-control" type="text" ng-model="pc.Person.Name" ng-minlength=5
+                                       ng-pattern="/^[a-zA-Z\s]+$/" />
+                                <p ng-show="PersonForm.NameTB.$error.pattern"
+                                   style="color:red">
+                                    Name can have only alphabets.
+                                </p>
+                                <p ng-show="PersonForm.NameTB.$error.minlength"
+                                   style="color:red">
+                                    Minimum 5 characters required.
+                                </p>
+                                <!--<p style="color:red" ng-show="{{PersonForm.NameTB.$valid}}">Invalid Name</p>-->
+
+                            </div>
+                            <div>
+                                <label for="NumTB">Phone Number</label>
+                                <input name="NumTB" class="form-control" type="text" ng-model="pc.Person.PhoneNumber" ng-pattern="/[0-9]/i" ng-minlength=11 ng-maxlength=11 />
+                                <!--<p ng-show="{{PersonForm.NumTB.$valid}}">Invalid Number</p>-->
+                                <p ng-show="PersonForm.NumTB.$error.pattern"
+                                   style="color:red">
+                                    Only digits allowed
+                                </p>
+                                <p ng-show="PersonForm.NumTB.$error.minlength"
+                                   style="color:red">
+                                    Only 11 digits required.
+                                </p>
+                                <p ng-show="PersonForm.NumTB.$error.maxlength"
+                                   style="color:red">
+                                    Only 11 digits required.
+                                </p>
+                            </div>
+
+                            <div>
+                                <label for="CityTB">City</label>
+                                <input name="CityTB" class="form-control" type="text" ng-model="pc.Person.City"
+                                       ng-pattern="/^[a-zA-Z\s]+$/" />
+                                <p ng-show="PersonForm.CityTB.$error.pattern"
+                                   style="color:red">
+                                    City can have only alphabets.
+                                </p>
+                            </div>
+                            <div>
+                                <label for="CountryTB">Country</label>
+                                <input name="CountryTB" class="form-control" type="text" ng-model="pc.Person.Country"
+                                       ng-pattern="/^[a-zA-Z\s]+$/" />
+                                <p ng-show="PersonForm.CountryTB.$error.pattern"
+                                   style="color:red">
+                                    Name can have only alphabets.
+                                </p>
+
+                            </div>
+
+                            <div class="dropdown" style="margin-top:10px">
+                                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                    <span ng-if="pc.Person.Gender"><i class="fa-solid fa-person-half-dress"></i> {{pc.Person.Gender}}</span><span ng-if="!pc.Person.Gender"><i class="fa-solid fa-person-half-dress"></i> Gender</span>
+
+                                    <span class="caret"></span>
+                                </button>
+                                <div class="dropdown-menu" role="combobox">
+                                    <!--<a class="dropdown-header">Dropdown header 1</a>-->
+                                    <a ng-repeat="g in pc.Genders" ng-click="pc.dropboxitemselected(g)" class="dropdown-item" href="#">{{g}}</a>
+                                    <!--<a class="dropdown-item" href="#">Female</a>-->
+                                </div>
+                                <p ng-show="!pc.Person.Gender"
+                                   style="color:red">
+                                    Select a gender
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button id="FormClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <input class="btn btn-primary" type="button" ng-click="pc.addPerson()" value="Add" ng-if="pc.IsAdd"/>
+                            <input class="btn btn-primary" type="button" ng-click="pc.updatePerson()" value="Update" ng-if="!pc.IsAdd"/>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <style>
+                .EditableListItem {
+                    border: none;
+                    border-color: transparent;
+                    background-color: transparent;
+                    width: 150px
+                }
+                    .EditableListItem .Small {
+                        width: 100px
+                    }
+            </style>
+            <table class="table table-striped">
+                <thead class="thead-light" style="color: blue; box-shadow: 2px 2px 5px 2px lightgray; border-radius: 5px; position: sticky; top: 240px ">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Gender</th>
+                        <th scope="col">Phone Number</th>
+                        <th scope="col">City</th>
+                        <th scope="col">Country</th>
+                        <th scope="col">Actions</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="person in pc.People">
+                        <th scope="row">{{person.id}}</th>
+                        <td>
+                            <input type="text" class="form-control EditableListItem" 
+                                   ng-model="person.name" ng-blur="pc.updatePersonInGrid(person)" ng-focus="pc.setUpdatePerson(person)" />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control EditableListItem" style="width:100px"
+                                   ng-model="person.gender" ng-blur="pc.updatePersonInGrid(person)" ng-focus="pc.setUpdatePerson(person)" />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control EditableListItem" 
+                                   ng-model="person.phoneNumber" ng-blur="pc.updatePersonInGrid(person)" ng-focus="pc.setUpdatePerson(person)" />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control EditableListItem"
+                                   ng-model="person.city" ng-blur="pc.updatePersonInGrid(person)" ng-focus="pc.setUpdatePerson(person)" />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control EditableListItem"
+                                   ng-model="person.country" ng-blur="pc.updatePersonInGrid(person)" ng-focus="pc.setUpdatePerson(person)" />
+                        </td>
+                        <td>
+                            <button class="btn btn-lg btn-block btn-info btn-custom" style="width:60px"
+                                    type="button" ng-click="pc.setUpdatePerson(person)" data-toggle="modal" data-target="#PersonForm">
+                                <i class="fa-solid fa-pencil"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-lg btn-block btn-danger btn-custom" style="width:60px"
+                                    type="button" ng-click="pc.setDeleteID(person.id)" data-toggle="modal" data-target="#deleteAlert">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div id="deleteAlert" class="modal fade">
+                <div class="modal-dialog modal-confirm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="icon-box" style="background-color:red">
+                                <i class="fa-regular fa-circle-xmark"></i>
+                            </div>
+                            <h4 class="modal-title">Are you sure?</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Do you really want to delete these records? This process cannot be undone.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="CloseDeleteAlert" type="button" class="btn btn-close" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger" ng-click="pc.deletePerson()">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--<div style="position: sticky; top: 0px; background-color: white; box-shadow: 2px 2px 5px 2px lightgray;padding-top:30px">
+
+        <h2>List</h2>
+        <hr />
+    </div>-->
+
+            <div class="col-md-12">
+
+                <!--<div class="d-inline-flex p-2" style="background-color: white; border-radius: 5px; margin: 5px; box-shadow: 2px 2px 5px 2px lightgray " ng-repeat="person in pc.People">
+            <div class="p-2">{{person.id}}</div>
+            <div class="p-2">{{person.name}}</div>
+            <div class="p-2">{{person.phoneNumber}}</div>
+            <div class="p-2">{{person.city}}</div>
+            <div class="p-2">{{person.country}}</div>
+            <div class="p-2">
+                <button class="btn btn-lg btn-block btn-light btn-custom" type="button" ng-click="pc.deletePerson(person.id)"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
+            <hr />
+        </div>-->
+            </div>
+        </div>
+        <hr />
+        
+        <div class="text-center">
+            <!-- Button HTML (to Trigger Modal) -->
+            <a id="alertBT" href="#myModal" class="trigger-btn" data-toggle="modal"></a>
+        </div>
+        <style>
+            .modal-confirm {
+                color: #636363;
+                width: 300px;
+                margin: 30px auto;
+            }
+        </style>
+        <div id="myModal" class="modal fade">
+            <div class="modal-dialog modal-confirm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="icon-box" style="background-color:greenyellow">
+                            <i class="fa-regular fa-circle-check"></i>
+                        </div>
+                        <h4 class="modal-title">Awesome!</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-center">Succesfully Saved</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .CustomFooter {
+            position: sticky;
+            bottom: 0;
+            border-start-end-radius:10px;
+            border-start-start-radius:10px;
+            width: 100%;
+            height: 70px; /* Set the fixed height of the footer here */
+            line-height: 60px; /* Vertically center the text there */
+            background-color: #4A3F57;
+            box-shadow: 2px 2px 5px 5px lightgray
+        }
+    </style>
+    <footer class="CustomFooter">
+        <div class="container">
+            <div class="d-inline-flex p-2" align="center">
+                <div class="p-2">
+                    <h3 class="text-muted">Hamza Rahman</h3>
+                </div>
+                <div class="p-2" style="margin-top:5px">
+                    <a href="https://www.facebook.com/HamzaRahmanRR/">
+                        <i class="fa-brands fa-facebook fa-2x"></i>
+                    </a>
+                </div>
+                <div class="p-2"style="margin-top:5px">
+                    <a href="#">
+                        <i class="fa-brands fa-twitter fa-2x"></i>
+                    </a>
+                    
+                </div>
+                <div class="p-2"style="margin-top:5px">
+                    <a href="#">
+                        <i class="fa-brands fa-instagram fa-2x"></i>
+                    </a>
+                    
+                </div>
+            </div>
+        </div>
+        
+    </footer>
+    <script src="js/angular.js"></script>
+
+    <script src="app/app.js"></script>
+    <script src="app/people.service.js"></script>
+    <script src="app/people.controller.js"></script>
+</body>
+</html>
